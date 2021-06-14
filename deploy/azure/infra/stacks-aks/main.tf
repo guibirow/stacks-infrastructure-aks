@@ -2,7 +2,7 @@ data "azurerm_client_config" "current" {}
 
 # Naming convention
 module "default_label" {
-  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.16.0"
+  source     = "git::https://github.com/cloudposse/terraform-null-label.git?ref=0.24.1"
   namespace  = format("%s-%s", var.name_company, var.name_project)
   stage      = var.stage
   name       = "${lookup(var.location_name_map, var.resource_group_location, "northeurope")}-${var.name_component}"
@@ -21,7 +21,7 @@ variable "vnet_cidr" {
 }
 
 module "aks_bootstrap" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-aks?ref=v1.3.5"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-aks?ref=v1.4.3"
   resource_namer          = module.default_label.id
   resource_group_location = var.resource_group_location
   spn_object_id           = data.azurerm_client_config.current.object_id
@@ -53,8 +53,8 @@ module "aks_bootstrap" {
 }
 
 module "ssl_app_gateway" {
-  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-app-gateway?ref=v1.3.5"
-  resource_namer            = "${module.default_label.id}"
+  source                    = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-app-gateway?ref=v1.4.3"
+  resource_namer            = module.default_label.id
   resource_group_name       = module.aks_bootstrap.resource_group_name
   resource_group_location   = var.resource_group_location
   create_ssl_cert           = true
