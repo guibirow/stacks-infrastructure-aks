@@ -110,12 +110,17 @@ stages:
               terraform_container: "terraform_custom"
               terraform_directory: "${{ variables.self_repo_tf_dir }}"
 
+  # Called Non-Prod instead of Dev as all Non-Production stages will deploy to here
   - stage: NonProd
+    dependsOn: Build
+    condition: and(succeeded(), ne(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-nonprod
+      - name: Environment.ShortName
+        value: nonprod
     jobs:
       - deployment: InfraNonProd
-        environment: dev
+        environment: ${{ variables.domain }}-nonprod
         variables:
           ARM_SUBSCRIPTION_ID: $(azure_subscription_id)
           ARM_CLIENT_ID: $(azure_client_id)
@@ -184,7 +189,7 @@ stages:
 
       - deployment: K8sNonProd
         dependsOn: InfraNonProd
-        environment: dev
+        environment: ${{ variables.domain }}-nonprod
         variables:
           AKS_DEFAULT_USER_IDENTITY_CLIENT_ID: $[ dependencies.InfraNonProd.outputs['InfraNonProd.tfoutputs.AKS_DEFAULT_USER_IDENTITY_CLIENT_ID'] ]
           AKS_DEFAULT_USER_IDENTITY_ID: $[ dependencies.InfraNonProd.outputs['InfraNonProd.tfoutputs.AKS_DEFAULT_USER_IDENTITY_ID'] ]
@@ -276,12 +281,15 @@ stages:
                     domain_filter: $(base_domain_nonprod)
 
   - stage: Prod
+    dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
+      - name: Environment.ShortName
+        value: prod
     jobs:
       - deployment: InfraProd
-        environment: prod
+        environment: ${{ variables.domain }}-prod
         variables:
           ARM_SUBSCRIPTION_ID: $(prod_azure_subscription_id)
           ARM_CLIENT_ID: $(prod_azure_client_id)
@@ -350,7 +358,7 @@ stages:
 
       - deployment: K8sProd
         dependsOn: InfraProd
-        environment: prod
+        environment: ${{ variables.domain}}-prod
         variables:
           AKS_DEFAULT_USER_IDENTITY_CLIENT_ID: $[ dependencies.InfraProd.outputs['InfraProd.tfoutputs.AKS_DEFAULT_USER_IDENTITY_CLIENT_ID'] ]
           AKS_DEFAULT_USER_IDENTITY_ID: $[ dependencies.InfraProd.outputs['InfraProd.tfoutputs.AKS_DEFAULT_USER_IDENTITY_ID'] ]
