@@ -67,7 +67,7 @@ variables:
   # This will always be predictably named by setting your company - project - stage - location - compnonent names above
   # IT IS SET per stage as an output to be consumed by deploy stage
   aks_cluster_version: "1.20.7"
-  region: "northeurope"
+  region: "westeurope"
   # DEFAULT IMAGE RUNNER
   pool_vm_image: ubuntu-20.04
   # Ensure you find this definition in the K8s and Azure steps to prefix with desired subdomain assignment
