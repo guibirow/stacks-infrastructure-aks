@@ -25,7 +25,7 @@ resources:
   - repository: templates
     type: github
     name: amido/stacks-pipeline-templates
-    ref: refs/tags/v1.4.26
+    ref: refs/tags/v2.0.0
     endpoint: amidostacks
   containers:
   - container: k8s_deploy
@@ -271,7 +271,7 @@ stages:
                     aks_dns_resource_group_name: $(AKS_RESOURCE_GROUP)
                     aks_set_acr_perms: false
                     aks_deploy_gatekeeper: false
-                    aks_aad_pod_identity: true
+                    aks_aad_pod_identity: false
                     aks_aad_pod_identity_yaml: {
                       aad_id_yml: $(self_repo_dir)/deploy/k8s_manifests/aks/aadpodidentity.yml,
                       aad_id_binding_yml: $(self_repo_dir)/deploy/k8s_manifests/aks/aadpodidentitybinding.yml
@@ -280,6 +280,7 @@ stages:
                     acr_resource_group_name: $(AKS_RESOURCE_GROUP)
                     ingress_definition:
                       - $(self_repo_dir)/deploy/k8s_manifests/aks/nginx-ingress.yml
+                    external_dns: false
                     external_dns_yml: $(self_repo_dir)/deploy/k8s_manifests/aks/external-dns.yml
                     domain_filter: $(base_domain_nonprod)
 
@@ -443,7 +444,7 @@ stages:
                     aks_dns_resource_group_name: $(AKS_RESOURCE_GROUP)
                     aks_set_acr_perms: false
                     aks_deploy_gatekeeper: false
-                    aks_aad_pod_identity: true
+                    aks_aad_pod_identity: false
                     aks_aad_pod_identity_yaml: {
                       aad_id_yml: $(self_repo_dir)/deploy/k8s_manifests/aks/aadpodidentity.yml,
                       aad_id_binding_yml: $(self_repo_dir)/deploy/k8s_manifests/aks/aadpodidentitybinding.yml,
@@ -452,5 +453,6 @@ stages:
                     acr_resource_group_name: $(AKS_RESOURCE_GROUP)
                     ingress_definition:
                       - $(self_repo_dir)/deploy/k8s_manifests/aks/nginx-ingress.yml
+                    external_dns: false
                     external_dns_yml: $(self_repo_dir)/deploy/k8s_manifests/aks/external-dns.yml
                     domain_filter: $(base_domain_prod)
