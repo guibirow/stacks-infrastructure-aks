@@ -73,7 +73,7 @@ variable "pfx_password" {
 }
 
 variable "dns_resource_group" {
-  type = bool
+  type = string
 }
 
 # ###########################
