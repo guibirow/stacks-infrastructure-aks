@@ -32,6 +32,7 @@ module "aks_bootstrap" {
   name_company            = var.name_company
   name_component          = var.name_component
   create_dns_zone         = var.create_dns_zone
+  dns_resource_group      = var.dns_resource_group
   dns_zone                = var.dns_zone
   internal_dns_zone       = var.internal_dns_zone
   # ACR doesn't need to exist across environments - ensure you pass create_acr = false in other core environments

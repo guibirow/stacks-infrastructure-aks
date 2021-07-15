@@ -78,6 +78,9 @@ variables:
   # Yamllint
   yamllint_config_file: "${{ variables.self_repo_dir }}/yamllint.conf"
   yamllint_scan_directory: "."
+  # Resource grup that the DNS zones are in
+  create_dns_zone: false
+  dns_resource_group: Stacks-Ancillary-Resources
 
 stages:
   - stage: Build
@@ -179,7 +182,8 @@ stages:
                       TF_VAR_dns_zone: $(base_domain_nonprod),
                       TF_VAR_internal_dns_zone: $(base_domain_internal_nonprod),
                       TF_VAR_pfx_password: "Password1",
-                      TF_VAR_create_dns_zone: true,
+                      TF_VAR_create_dns_zone: $(create_dns_zone),
+                      TF_VAR_dns_resource_group: $(dns_resource_group),
                       TF_VAR_create_aksvnet: true,
                       TF_VAR_create_user_identity: true,
                       TF_VAR_acr_resource_group: "",
@@ -286,7 +290,7 @@ stages:
 
   - stage: Prod
     dependsOn: Build
-    # condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'))
     variables:
       - group: amido-stacks-infra-credentials-prod
 
@@ -352,7 +356,8 @@ stages:
                       TF_VAR_dns_zone: $(base_domain_prod),
                       TF_VAR_internal_dns_zone: $(base_domain_internal_prod),
                       TF_VAR_pfx_password: "Password1",
-                      TF_VAR_create_dns_zone: true,
+                      TF_VAR_create_dns_zone: $(create_dns_zone),
+                      TF_VAR_dns_resource_group: $(dns_resource_group),
                       TF_VAR_create_aksvnet: true,
                       TF_VAR_create_user_identity: true,
                       TF_VAR_acr_resource_group: "",
