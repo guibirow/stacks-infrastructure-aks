@@ -27,11 +27,11 @@ resources:
       name: amido/stacks-pipeline-templates
       ref: refs/tags/v2.0.1
       endpoint: amidostacks
-      containers:
-        - container: k8s_deploy
-          image: amidostacks/ci-k8s:0.0.12
-        - container: terraform_custom
-          image: amidostacks/ci-tf:0.0.8
+  containers:
+    - container: k8s_deploy
+      image: amidostacks/ci-k8s:0.0.12
+    - container: terraform_custom
+      image: amidostacks/ci-tf:0.0.8
 
 variables:
   company: amido
