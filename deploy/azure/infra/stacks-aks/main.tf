@@ -21,7 +21,7 @@ variable "vnet_cidr" {
 }
 
 module "aks_bootstrap" {
-  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-aks?ref=v1.4.3"
+  source                  = "git::https://github.com/amido/stacks-terraform//azurerm/modules/azurerm-aks?ref=v1.5.0"
   resource_namer          = module.default_label.id
   resource_group_location = var.resource_group_location
   spn_object_id           = data.azurerm_client_config.current.object_id
@@ -32,6 +32,7 @@ module "aks_bootstrap" {
   name_company            = var.name_company
   name_component          = var.name_component
   create_dns_zone         = var.create_dns_zone
+  dns_resource_group      = var.dns_resource_group
   dns_zone                = var.dns_zone
   internal_dns_zone       = var.internal_dns_zone
   # ACR doesn't need to exist across environments - ensure you pass create_acr = false in other core environments
@@ -57,6 +58,7 @@ module "ssl_app_gateway" {
   resource_namer            = module.default_label.id
   resource_group_name       = module.aks_bootstrap.resource_group_name
   resource_group_location   = var.resource_group_location
+  dns_resource_group        = var.dns_resource_group
   create_ssl_cert           = true
   vnet_name                 = module.aks_bootstrap.vnet_name
   vnet_cidr                 = var.vnet_cidr

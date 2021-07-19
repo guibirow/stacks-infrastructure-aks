@@ -72,6 +72,10 @@ variable "pfx_password" {
   type = string
 }
 
+variable "dns_resource_group" {
+  type = string
+}
+
 # ###########################
 # # CONDITIONALS
 # ##########################
